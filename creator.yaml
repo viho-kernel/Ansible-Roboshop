@@ -63,17 +63,6 @@
     - item.item == "frontend"
     - action == "create"
 
-  - name: create router 53 records
-    amazon.aws.route53:
-      state: absent
-      zone: "{{ domain_name }}"
-      record: "roboshop-{{ enviro }}.{{ domain_name }}" #roboshop-dev.opsora.space
-      type: A
-      ttl: 1
-      wait: true
-    when: 
-    - action == "create"
-
   - name: Delete router 53 records
     amazon.aws.route53:
       state: absent
