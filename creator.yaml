@@ -5,6 +5,7 @@
     sg_id: sg-0d34a14d6eba15d9d
     ami_id: ami-0220d79f3f480ecf5
     enviro: dev
+    domain_name: opsora.space
     instances:
     - mongodb
     - catalogue
@@ -26,3 +27,14 @@
   - name: print the ec2_output
     ansible.builtin.debug:
       msg: "{{ ec2_output }}"
+
+  - name: create router 53 records
+    amazon.aws.route53:
+      state: present
+      zone: "{{ domain_name }}"
+      record: "{{ item.item }}-{{ env }}.{{ domain_name }}" #mongodb-dev.opsora.space
+      type: A
+      ttl: 1
+      value: "{{ item.instances[0].private_ip_address }}"
+      wait: true
+    loop: "{{ ec2_output.results }}"
