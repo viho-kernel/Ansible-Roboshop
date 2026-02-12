@@ -38,3 +38,8 @@
       value: "{{ item.instances[0].private_ip_address }}"
       wait: true
     loop: "{{ ec2_output.results }}"
+    register: route_53_output
+
+  - name: printing route53 records
+    ansible.builtin.debug:
+      msg: "{{ route_53_output }}"
