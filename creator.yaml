@@ -1,0 +1,28 @@
+- name: creating ec2 and router 53 recordss
+  hosts: all
+  connection: local
+  vars:
+    sg_id: sg-0d34a14d6eba15d9d
+    ami_id: ami-0220d79f3f480ecf5
+    environment: dev
+    instances:
+    - mongodb
+    - catalogue
+  tasks: 
+  - name: create ec2 instances
+    amazon.aws.ec2_instance:
+      name: "{{ item }}-{{ environment }}"
+      instace_type: "t3.micro"
+      security_group: "{{ sg_id }}"
+      image_id: "{{ ami_id }}"
+      tags:
+         project: roboshop
+         component: "{{ item }}"
+         enviroment: "{{ environment }}"
+         Name: "{{ item }}-{{ environment }}"
+    loop: "{{ instances }}"
+    register: ec2_output #taking and saving the ec2_output
+
+  - name: print the ec2_output
+    ansible.builtin.debug:
+      msg: ec2_output
