@@ -1,6 +1,6 @@
 # ansible-playbook -i localhost, -e "instances=[ 'mongodb','catalogue','redis','user','cart','mysql','shipping','rabbitmq','payment','frontend' ]" roboshop.yaml
 - name: creating ec2 and router 53 recordss
-  hosts: all
+  hosts: local
   connection: local
   vars:
     sg_id: sg-0d34a14d6eba15d9d
@@ -16,6 +16,8 @@
       instance_type: "t3.micro"
       security_group: "{{ sg_id }}"
       image_id: "{{ ami_id }}"
+      count: 1
+      wait: yes
       tags:
          project: roboshop
          component: "{{ item }}"
@@ -82,8 +84,6 @@
       ttl: 1
       wait: true
     when: action == "destroy"
-
-
 
   - name: Delete ec2 instances
     amazon.aws.ec2_instance:
