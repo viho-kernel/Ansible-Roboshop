@@ -1,0 +1,56 @@
+- name: Configuring frontend
+  hosts: frontend
+  become: yes 
+
+  tasks:
+  - name: Install Nginx
+    ansible.builtin.command: dnf module list Nginx
+  
+  - name: Disable Nginx
+    ansible.builtin.service:
+      name: nginx
+      state: stopped
+      enabled: false
+  
+  - name: enable Nginx
+    ansible.builtin.service:
+      name: nginx:1.24
+      state: started
+      enabled: true
+  
+  - name: install nginx
+    ansible.builtin.dnf:
+      name: nginx
+      state: present
+  
+  - name: Start & Enable Nginx
+    ansible.builtin.service:
+      name: nginx
+      state: started
+      enabled: yes
+
+  - name: Removing browser
+    ansible.builtin.command: rm -rf /usr/share/nginx/html/*
+  
+  - name: Download the frontend content
+    ansible.builtin.get_url:
+      url: https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip
+      dest: /tmp/frontend.zip
+
+  - name: move to the code place
+    ansible.builtin.command: cd /usr/share/nginx/html
+
+  - name: Unzipping the code
+    ansible.buitlin.unarchive:
+      src: /tmp/frontend.zip
+      dest: /usr/share/nginx/html
+
+  - name: Copying Reverse proxy configuration
+    ansible.builtin.copy:
+      src: frontend.conf
+      dest: /etc/nginx/nginx.conf
+  
+  - name: Restarting Nginx
+    ansible.builtin.service:
+      name: nginx
+      state: restarted
