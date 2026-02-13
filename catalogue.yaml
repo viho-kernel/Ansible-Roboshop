@@ -1,5 +1,5 @@
-- name: creating mongodb file
-  hosts: mongodb
+- name: creating catalogue file
+  hosts: catalogue
   become: yes
   tasks:
   - name: disabling nodejs
