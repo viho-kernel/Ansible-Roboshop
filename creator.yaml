@@ -8,9 +8,7 @@
     enviro: dev
     action: create
     domain_name: opsora.space
-    instances:
-    - mongodb
-    - catalogue
+    instances: "{{ groups['instances'] }}"
   tasks: 
   - name: create ec2 instances
     amazon.aws.ec2_instance:
@@ -90,6 +88,6 @@
   - name: Delete ec2 instances
     amazon.aws.ec2_instance:
       state: absent
-      name: "{{ item }}-{{ env }}"
+      name: "{{ item }}-{{ enviro }}"
     loop: "{{ instances }}"
     when: action == "destroy"
