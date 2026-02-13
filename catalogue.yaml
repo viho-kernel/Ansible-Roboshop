@@ -13,7 +13,7 @@
       name: nodejs
       state: present
 
-  - name: creating user module
+  - name: creating user roboshop
     ansible.builtin.user:
       name: roboshop
       system: true
@@ -31,7 +31,7 @@
       path: /app
       state: directory
 
-  - name: delete catalogue zip file
+  - name: Remove Zip file
     ansible.builtin.file:
       path: /tmp/catalogue.zip
       state: absent
@@ -40,9 +40,6 @@
     ansible.builtin.get_url:
       url: https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip
       dest: /tmp/catalogue.zip
-  
-  - name: move to app directory
-    ansible.builtin.command: cd /app
   
   - name: removing code
     ansible.builtin.command: rm -rf /app/*

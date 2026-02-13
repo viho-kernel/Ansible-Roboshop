@@ -1,0 +1,22 @@
+- name: configuring user
+  hosts: user
+  become: yes
+  tasks:
+  - name: disabling nodejs module
+    ansible.builtin.command: dnf module disable nodejs -y
+  
+  - name: Enabling nodejs module
+    ansible.builtin.command: dnf module enable nodejs:20 -y
+  
+  - name: install nodejs
+    ansible.builtin.dnf:
+      name: nodejs
+      state: present
+  
+  - name: creating user roboshop
+    ansible.builtin.user:
+      name: roboshop
+      system: true
+      home: /app
+      shell: /sbin/nologin
+      comment: "Roboshop system user"
