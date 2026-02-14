@@ -33,6 +33,11 @@
       src: /tmp/frontend.zip
       dest: /usr/share/nginx/html/
       remote_src: yes
+    
+  - name: remove default nginx
+    ansible.builtin.file:
+      state: absent
+      path: /etc/nginx/default.d/expense.conf
 
   - name: Copying Reverse proxy configuration
     ansible.builtin.copy:
@@ -42,5 +47,5 @@
   - name: Restarting Nginx
     ansible.builtin.service:
       name: nginx
-      state: started
+      state: restarted
       enabled: yes
