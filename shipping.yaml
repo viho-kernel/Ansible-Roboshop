@@ -72,8 +72,11 @@
 
   - name: Ensure Python MySQL driver is installed
     ansible.builtin.pip:
-      name: PyMySQL
+      name: "{{ item }}"
       executable: pip3
+    loop:
+    - cryptography
+    - PyMySQL
 
   - name: Load schema database
     community.mysql.mysql_db:
