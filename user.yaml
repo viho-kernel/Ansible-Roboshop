@@ -63,12 +63,11 @@
     ansible.builtin.systemd_service:
       daemon_reload: yes
         
-  - name: start user
+  - name: Start user
     ansible.builtin.service:
       name: user
       state: restarted
       enabled: yes
-
 
 
 
