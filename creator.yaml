@@ -20,7 +20,7 @@
     - payment
     - frontend
     - dispatch
-    
+
   tasks: 
   - name: create ec2 instances
     amazon.aws.ec2_instance:
@@ -30,12 +30,11 @@
       image_id: "{{ ami_id }}"
       count: 1
       wait: false
-      overwrite: true
       tags:
-         project: roboshop
-         component: "{{ item }}"
-         enviroment: "{{ enviro }}"
-         Name: "{{ item }}-{{ enviro }}"
+        project: roboshop
+        component: "{{ item }}"
+        enviroment: "{{ enviro }}"
+        Name: "{{ item }}-{{ enviro }}"
     loop: "{{ instances }}"
     register: ec2_output #taking and saving the ec2_output
     when: action == "create"
