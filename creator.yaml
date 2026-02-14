@@ -29,7 +29,6 @@
       security_group: "{{ sg_id }}"
       image_id: "{{ ami_id }}"
       count: 1
-      wait: false
       tags:
         project: roboshop
         component: "{{ item }}"
