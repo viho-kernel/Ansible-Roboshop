@@ -41,7 +41,7 @@
     ansible.builtin.command: cd /usr/share/nginx/html
 
   - name: Unzipping the code
-    ansible.buitlin.unarchive:
+    ansible.builtin.unarchive:
       src: /tmp/frontend.zip
       dest: /usr/share/nginx/html/
 

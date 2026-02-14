@@ -1,5 +1,5 @@
 # ansible-playbook -i localhost, -e "instances=[ 'mongodb','catalogue','redis','user','cart','mysql','shipping','rabbitmq','payment','frontend' ]" roboshop.yaml
-- name: creating ec2 and router 53 recordss
+- name: creating ec2 and router 53 records
   hosts: localhost
   connection: local
   vars:
