@@ -20,7 +20,7 @@
     - payment
     - frontend
     - dispatch
-  become: yes
+    
   tasks: 
   - name: create ec2 instances
     amazon.aws.ec2_instance:
