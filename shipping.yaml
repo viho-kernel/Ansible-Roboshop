@@ -80,7 +80,6 @@
       name: shipping
       state: import
       login_host: "{{ MYSQL_HOST }}"
-      login_user: root
       login_password: ExpenseApp@1
       target: "{{ item }}"
     loop:
