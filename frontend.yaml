@@ -3,8 +3,6 @@
   become: yes 
 
   tasks:
-  - name: Install Nginx
-    ansible.builtin.command: dnf module list Nginx
   
   - name: Disable Nginx
     ansible.builtin.service:
