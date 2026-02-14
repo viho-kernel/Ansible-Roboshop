@@ -51,8 +51,6 @@
       type: A
       ttl: 1
       value: "{{ item.instances[0].private_ip_address }}"
-      wait: false
-      overwrite: true
     loop: "{{ ec2_output.results }}"
     register: route_53_output
     when: action == "create"
@@ -70,8 +68,6 @@
       type: A
       ttl: 1
       value: "{{ item.instances[0].public_ip_address }}"
-      wait: false
-      overwrite: true
     loop: "{{ ec2_output.results }}"
     when: 
     - item.item == "frontend"
