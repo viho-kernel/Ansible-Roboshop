@@ -70,24 +70,23 @@
     ansible.builtin.systemd_service:
       daemon_reload: true
 
-- name: Ensure Python MySQL driver is installed
-  ansible.builtin.pip:
-    name: PyMySQL
-    executable: pip3
+  - name: Ensure Python MySQL driver is installed
+    ansible.builtin.pip:
+      name: PyMySQL
+      executable: pip3
 
-- name: Load schema database
-  community.mysql.mysql_db:
-    name: shipping
-    state: import
-    login_host: "{{ MYSQL_HOST }}"
-    login_user: root
-    login_password: ExpenseApp@1
-    target: "{{ item }}"
-  
-  loop:
-  - /app/db/schema.sql
-  - /app/db/app-user.sql
-  - /app/db/master-data.sql
+  - name: Load schema database
+    community.mysql.mysql_db:
+      name: shipping
+      state: import
+      login_host: "{{ MYSQL_HOST }}"
+      login_user: root
+      login_password: ExpenseApp@1
+      target: "{{ item }}"
+    loop:
+    - /app/db/schema.sql
+    - /app/db/app-user.sql
+    - /app/db/master-data.sql
 
   - name: start shipping service
     ansible.builtin.service:
