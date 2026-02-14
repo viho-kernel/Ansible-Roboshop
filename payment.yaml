@@ -46,14 +46,13 @@
       src: /tmp/payment.zip
       dest: /app
       remote_src: yes
-  
-  - name: changint to app directory
-    ansible.builtin.command: cd /app
 
   - name: Installing dependencies
     ansible.builtin.pip:
       requirements: requirements.txt
       state: present
+    args:
+      chdir: /app
   
   - name: Copying payment service
     ansible.builtin.copy:
