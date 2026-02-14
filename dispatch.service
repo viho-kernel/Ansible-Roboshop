@@ -1,14 +1,12 @@
 [Unit]
-Description=Dispatch Service
-
+Description = Dispatch Service
 [Service]
 User=roboshop
-WorkingDirectory=/app
-
-Environment=AMQP_HOST={{ RABBITMQ_HOST }}
+// highlight-start
+Environment=AMQP_HOST="{{ RABBITMQ_HOST }}"
+// highlight-end
 Environment=AMQP_USER=roboshop
 Environment=AMQP_PASS=roboshop123
-
 ExecStart=/app/dispatch
 SyslogIdentifier=dispatch
 
