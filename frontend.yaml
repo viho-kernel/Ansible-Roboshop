@@ -43,7 +43,7 @@
   - name: Unzipping the code
     ansible.buitlin.unarchive:
       src: /tmp/frontend.zip
-      dest: /usr/share/nginx/html
+      dest: /usr/share/nginx/html/
 
   - name: Copying Reverse proxy configuration
     ansible.builtin.copy:
