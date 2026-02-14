@@ -49,6 +49,8 @@
     args:
       chdir: /app
 
+#here is where we want to install dependencies and move directories
+
   - name: moving between directories
     ansible.builtin.command: mv target/shipping-1.0.jar shipping.jar
     args:
@@ -58,10 +60,27 @@
     ansible.builtin.template:
       src: shipping.service
       dest: /etc/systemd/system/shipping.service
-
+  
+  - name: Install mysql
+    ansible.builtin.dnf:
+      name: mysql
+      state: present
+  
   - name: Daemon reload
     ansible.builtin.systemd_service:
-      daemon_reload: yes
+      daemon_reload: true
+
+  - name: Loading schema 
+    community.mysql.mysql_db:
+      state: import
+      name: all
+      login_host: "{{ MYSQL_HOST }}"
+      login_password: RoboShop@1
+      target: "{{ item }}"
+    loop:
+    - /app/db/schema.sql
+    - /app/db/app-user.sql 
+    - /app/db/master-data.sql
 
   - name: start shipping service
     ansible.builtin.service:
