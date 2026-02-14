@@ -73,18 +73,18 @@
   - name: Ensure Python MySQL driver is installed
     ansible.builtin.pip:
       name: "{{ item }}"
-      executable: pip3
+      executable: pip3.9
     loop:
     - cryptography
     - PyMySQL
 
   - name: Load schema database
     community.mysql.mysql_db:
-      name: shipping
       state: import
+      name: all
       login_host: "{{ MYSQL_HOST }}"
       login_user: root
-      login_password: ExpenseApp@1
+      login_password: RoboShop@1
       target: "{{ item }}"
     loop:
     - /app/db/schema.sql
