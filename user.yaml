@@ -61,8 +61,7 @@
   
   - name: Daemon reload
     ansible.builtin.systemd_service:
-      state: restarted
-      daemon_reload: true
+      daemon_reload: yes
         
   - name: start user
     ansible.builtin.service:

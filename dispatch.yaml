@@ -1,18 +1,12 @@
-- name: creating cart file
-  hosts: cart
+- name: Configuring Go Lang
+  hosts: dispatch
   become: yes
   tasks:
-  - name: disabling nodejs
-    ansible.builtin.command: dnf module disable nodejs -y
-
-  - name: enabling nodejs 20
-    ansible.builtin.command: dnf module enable nodejs:20 -y
-
-  - name: installing nodejs
+  - name: Installing Go Lang
     ansible.builtin.dnf:
-      name: nodejs
+      name: golang
       state: present
-
+  
   - name: creating user roboshop
     ansible.builtin.user:
       name: roboshop
@@ -33,44 +27,51 @@
 
   - name: Remove Zip file
     ansible.builtin.file:
-      path: /tmp/cart.zip
+      path: /tmp/dispatch.zip
       state: absent
 
   - name: Download application code
     ansible.builtin.get_url:
-      url: https://roboshop-artifacts.s3.amazonaws.com/cart-v3.zip
-      dest: /tmp/cart.zip
+      url: https://roboshop-artifacts.s3.amazonaws.com/dispatch-v3.zip
+      dest: /tmp/dispatch.zip
   
   - name: removing code
     ansible.builtin.command: rm -rf /app/*
 
   - name: unzipping code
     ansible.builtin.unarchive:
-      src: /tmp/cart.zip
+      src: /tmp/dispatch.zip
       dest: /app
       remote_src: yes
   
-  - name: installing dependencies
-    community.general.npm:
-      path: /app
+  - name: Initialize go module
+    ansible.builtin.command: go mod init dispatch
+    args:
+      chdir: /app
+
+  - name: Download go dependencies
+    ansible.builtin.command: go get
+    args:
+      chdir: /app
+
+  - name: Build go application
+    ansible.builtin.command: go build
+    args:
+      chdir: /app
+
   
-  - name: copy cart service
-    ansible.builtin.template:
-      src: cart.service
-      dest: /etc/systemd/system/cart.service
-  
+  - name: Copying service file
+    ansible.builtin.copy:
+      src: dispatch.service
+      dest: /etc/systemd/system/dispatch.service
+
   - name: Daemon reload
     ansible.builtin.systemd_service:
       daemon_reload: yes
         
-  - name: start cart
+  - name: start dispatch
     ansible.builtin.service:
-      name: cart
+      name: dispatch
       state: restarted
       enabled: yes
 
-
-
-
-    
-    

@@ -52,5 +52,19 @@
   - name: moving between directories
     ansible.builtin.command: mv target/shipping-1.0.jar shipping.jar
     args:
-      creates: shipping.jar
-      removes: target/shipping-1.0.jar
+      chdir: /app
+  
+  - name: Copying service file
+    ansible.builtin.template:
+      src: shipping.service
+      dest: /etc/systemd/system/shipping.service
+
+  - name: Daemon reload
+    ansible.builtin.systemd_service:
+      daemon_reload: yes
+
+  - name: start shipping service
+    ansible.builtin.service:
+      name: shipping
+      state: restarted
+      enabled: yes

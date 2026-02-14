@@ -1,18 +1,15 @@
-- name: creating cart file
-  hosts: cart
+- name: Configuring Payment
+  hosts: payment
   become: yes
   tasks:
-  - name: disabling nodejs
-    ansible.builtin.command: dnf module disable nodejs -y
-
-  - name: enabling nodejs 20
-    ansible.builtin.command: dnf module enable nodejs:20 -y
-
-  - name: installing nodejs
+  - name: installing python3
     ansible.builtin.dnf:
-      name: nodejs
+      name:
+      - python3
+      - gcc
+      - python3-devel
       state: present
-
+  
   - name: creating user roboshop
     ansible.builtin.user:
       name: roboshop
@@ -33,44 +30,42 @@
 
   - name: Remove Zip file
     ansible.builtin.file:
-      path: /tmp/cart.zip
+      path: /tmp/payment.zip
       state: absent
 
   - name: Download application code
     ansible.builtin.get_url:
-      url: https://roboshop-artifacts.s3.amazonaws.com/cart-v3.zip
-      dest: /tmp/cart.zip
+      url: https://roboshop-artifacts.s3.amazonaws.com/payment-v3.zip
+      dest: /tmp/payment.zip
   
   - name: removing code
     ansible.builtin.command: rm -rf /app/*
 
   - name: unzipping code
     ansible.builtin.unarchive:
-      src: /tmp/cart.zip
+      src: /tmp/payment.zip
       dest: /app
       remote_src: yes
   
-  - name: installing dependencies
-    community.general.npm:
-      path: /app
+  - name: changint to app directory
+    ansible.builtin.command: cd /app
+
+  - name: Installing dependencies
+    ansible.builtin.pip:
+      requirements: requirements.txt
+      state: present
   
-  - name: copy cart service
-    ansible.builtin.template:
-      src: cart.service
-      dest: /etc/systemd/system/cart.service
+  - name: Copying payment service
+    ansible.builtin.copy:
+      src: payment.repo
+      dest: /etc/systemd/system/payment.service
   
   - name: Daemon reload
     ansible.builtin.systemd_service:
       daemon_reload: yes
-        
-  - name: start cart
+
+  - name: start shipping service
     ansible.builtin.service:
-      name: cart
+      name: payment
       state: restarted
       enabled: yes
-
-
-
-
-    
-    
