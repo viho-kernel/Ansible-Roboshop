@@ -8,7 +8,19 @@
     enviro: dev
     action: create
     domain_name: opsora.space
-    instances: "{{ groups['instances'] }}"
+    instances:
+    - mongodb
+    - catalogue
+    - redis
+    - user
+    - cart
+    - mysql
+    - shipping
+    - rabbitmq
+    - payment
+    - frontend
+    - dispatch
+  become: yes
   tasks: 
   - name: create ec2 instances
     amazon.aws.ec2_instance:
