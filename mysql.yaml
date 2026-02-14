@@ -1,5 +1,5 @@
 - name: creating mongodb file
-  hosts: mongodb
+  hosts: mysql
   become: yes
   tasks:
   - name: installing mysql-server
