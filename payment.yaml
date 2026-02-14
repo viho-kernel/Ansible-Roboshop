@@ -4,11 +4,12 @@
   tasks:
   - name: installing python3
     ansible.builtin.dnf:
-      name:
-      - python3
-      - gcc
-      - python3-devel
+      name: "{{ item }}"
       state: present
+    loop:
+    - python3
+    - gcc
+    - python3-devel
   
   - name: creating user roboshop
     ansible.builtin.user:
@@ -50,7 +51,7 @@
   - name: Installing dependencies
     ansible.builtin.pip:
       requirements: requirements.txt
-      state: present
+      executable: pip3.9
     args:
       chdir: /app
   
@@ -61,7 +62,7 @@
   
   - name: Daemon reload
     ansible.builtin.systemd_service:
-      daemon_reload: yes
+      daemon_reload: true
 
   - name: start shipping service
     ansible.builtin.service:
