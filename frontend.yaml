@@ -1,50 +1,47 @@
-- name: Configuring frontend
+- name: configure frontend server
   hosts: frontend
-  become: yes 
-
-  tasks:  
-  - name: enable Nginx 1.24
+  become: yes
+  tasks:
+  - name: enable nginx 1.24
     ansible.builtin.command: dnf module enable nginx:1.24 -y
-  
+
   - name: install nginx
     ansible.builtin.dnf:
       name: nginx
       state: present
-  
-  - name: Start & Enable Nginx
-    ansible.builtin.service:
-      name: nginx
-      state: started
-      enabled: yes
 
-  - name: Removing browser
-    ansible.builtin.command: rm -rf /usr/share/nginx/html/*
-  
-  - name: Download the frontend content
+  - name: Remove the entire directory
+    ansible.builtin.file:
+      path: /usr/share/nginx/html
+      state: absent
+
+  - name: create html directory
+    ansible.builtin.file:
+      path: /usr/share/nginx/html
+      state: directory
+
+  - name: download frontend
     ansible.builtin.get_url:
-      url: https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip
+      url: https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip 
       dest: /tmp/frontend.zip
 
-  - name: move to the code place
-    ansible.builtin.command: cd /usr/share/nginx/html
-
-  - name: Unzipping the code
+  - name: unarchieve frontend
     ansible.builtin.unarchive:
       src: /tmp/frontend.zip
-      dest: /usr/share/nginx/html/
+      dest: /usr/share/nginx/html
       remote_src: yes
-    
+
   - name: remove default nginx
     ansible.builtin.file:
       state: absent
-      path: /etc/nginx/default.d/expense.conf
+      path: /etc/nginx/nginx.conf
 
-  - name: Copying Reverse proxy configuration
-    ansible.builtin.copy:
+  - name: copy nginx.conf
+    ansible.builtin.template:
       src: frontend.conf
       dest: /etc/nginx/nginx.conf
-  
-  - name: Restarting Nginx
+
+  - name: resatrt nginx
     ansible.builtin.service:
       name: nginx
       state: restarted
